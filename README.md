@@ -1,5 +1,7 @@
 # STM32F091 ile zamanlayıcı, UART, DAC ve ADC'yi kesmelerle kullanma
 
+> [TECH-OHM](https://tech-ohm.com) açık kaynak projesi
+
 Dört çevre birimini `HAL_Delay` kullanmadan, sadece zamanlayıcı ve kesmelerle çalıştıran bir uygulama. Ana döngü boş. Her iş kendi kesmesinde ya da zamanlayıcı tetiğiyle yürüyor.
 
 ## Ne yapıyor
@@ -65,4 +67,10 @@ MIT. `Drivers` klasöründeki STM32 HAL ve CMSIS dosyaları kendi lisanslarıyla
 
 ## Yazar
 
-Gömülü Sistem Mühendisi M. Eyüb Can, [TECH-OHM](https://tech-ohm.com)
+Gömülü Sistem Mühendisi M. Eyüb Can, [TECH-OHM](https://tech-ohm.com) kurucusu
+
+## TECH-OHM
+
+[TECH-OHM](https://tech-ohm.com) elektronik kart ve gömülü yazılım tasarlayan bir mühendislik firması. Fikirden seri üretime kadar tasarım işi alıyor, TECH-OHM Akademi'de 12 aylık gömülü sistem eğitimi ve şirketlere özel danışmanlık veriyor.
+
+Web: [tech-ohm.com](https://tech-ohm.com) · E-posta: info@tech-ohm.com
