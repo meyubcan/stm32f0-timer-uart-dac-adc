@@ -22,17 +22,17 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-uint8_t dizi[50] = { // sırayla gönderilecek 50 değer
+uint8_t dizi[50] = { // 50 values, sent one after another
   45, 198, 7, 123, 56, 214, 89, 34, 167, 92,
   201, 18, 140, 76, 255, 61, 9, 173, 48, 130,
   84, 221, 37, 159, 102, 5, 188, 66, 147, 29,
   210, 95, 12, 171, 53, 199, 81, 164, 24, 136,
   72, 205, 41, 156, 98, 15, 182, 63, 119, 231
 };
-// alıcı uart değişkenlerim
+// UART receive variables
 volatile uint8_t rx_byte = 0;
 volatile uint8_t idx = 0;
-int count=0; // gönderilen bayt sayısı
+int count=0; // number of bytes sent
 volatile uint8_t adc_value = 0;
 /* USER CODE END Includes */
 
@@ -81,7 +81,7 @@ static void MX_USART3_UART_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) // TIM2 her 2 saniyede bir taşar
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) // TIM2 overflows every 2 seconds
 {
     if (htim->Instance == TIM2)
     {
@@ -94,25 +94,25 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) // TIM2 her 2 saniye
     }
 }
 
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) // USART3'ten bir bayt geldi
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) // a byte arrived on USART3
 {
     if (huart->Instance == USART3)
     {
     	if (rx_byte <= 100)
     	{
-    	    HAL_DAC_SetValue(&hdac, DAC_CHANNEL_2, DAC_ALIGN_12B_R, 1241); // 1V' a karşılık gelen değer
+    	    HAL_DAC_SetValue(&hdac, DAC_CHANNEL_2, DAC_ALIGN_12B_R, 1241); // DAC value for 1 V
     	}
     	else if (rx_byte <= 200)
     	{
-    	    HAL_DAC_SetValue(&hdac, DAC_CHANNEL_2, DAC_ALIGN_12B_R, 2482);// 2V
+    	    HAL_DAC_SetValue(&hdac, DAC_CHANNEL_2, DAC_ALIGN_12B_R, 2482);// 2 V
     	}
     	else
     	{
-    	    HAL_DAC_SetValue(&hdac, DAC_CHANNEL_2, DAC_ALIGN_12B_R, 3723);// 3V
+    	    HAL_DAC_SetValue(&hdac, DAC_CHANNEL_2, DAC_ALIGN_12B_R, 3723);// 3 V
     	}
 
 
-    	HAL_UART_Receive_IT(&huart3, (uint8_t*)&rx_byte, 1); // tekrar 1 byte al
+    	HAL_UART_Receive_IT(&huart3, (uint8_t*)&rx_byte, 1); // wait for the next byte
     }
 }
 
@@ -161,11 +161,11 @@ int main(void)
   MX_TIM3_Init();
   MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
-  HAL_UART_Receive_IT(&huart3, (uint8_t*)&rx_byte, 1);// USART3 alımını başlat
-  HAL_TIM_Base_Start_IT(&htim2); // timer2 : 2 saniyeye ioc ' de ayarlandı
-  HAL_DAC_Start(&hdac, DAC_CHANNEL_2); // digital analog converter başlatıyorum
-  HAL_TIM_Base_Start(&htim3);     // TIM3 başlattım TRGO üretip adc tetiklenecek
-  HAL_ADC_Start_IT(&hadc);       // ADC tetik bekleyecek tetik gelince interrupt ile okuma yapacak
+  HAL_UART_Receive_IT(&huart3, (uint8_t*)&rx_byte, 1);// start receiving on USART3
+  HAL_TIM_Base_Start_IT(&htim2); // TIM2 is set to 2 seconds in the .ioc
+  HAL_DAC_Start(&hdac, DAC_CHANNEL_2); // start the DAC
+  HAL_TIM_Base_Start(&htim3);     // TIM3 runs and its TRGO triggers the ADC
+  HAL_ADC_Start_IT(&hadc);       // ADC waits for the trigger and reads the result in an interrupt
   /* USER CODE END 2 */
 
   /* Infinite loop */
